@@ -509,6 +509,12 @@ class IngressServer {
 }
 
 
+/* TODO
+ * Error Handling
+ * 1. If there is not active proxy listener, then return 503 server unavailable
+ * 2. If proxy timesout, then return 504 gateway timeout
+ * 3. Add ErrorPages
+ */
 function createVhostMiddleware(
     server: IngressServer
 ): express.Handler {
@@ -689,7 +695,20 @@ async function cdnUndeploy(
         fs.rmSync(vhostDirectory, { recursive: true });
     }
 }
+/*TODO
+ * 1. Proxy Deploy
+ * 1.1 only takes a domain
+ * 1.2 creates a vhost.json in ../../cli/server/vhosts/domain/vhost.json
+ * 1.3 clear the director 
+ * 1.4 it should be a single json object that has the following `{"type": "proxy"}`
+ */
 
+/*TODO
+ * 1. Write proxy deploy cli command
+ * 2. Create new package `command-proxy-deploy`
+ * 3. Open websocket connect, send proxy deploy to the server
+ * 4. see cdn deploy for reference
+ */
 
 type AuthenticatedMessage = {
     method: "cdn-deploy" | "cdn-undeploy" | "proxy-deploy" | "proxy-undeploy" | "proxy-serve";
