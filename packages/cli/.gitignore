@@ -1,0 +1,9 @@
+*.zip
+*.base64
+*.crt
+*.key
+*.key.secure
+server/
+dist/
+compiled/
+types/

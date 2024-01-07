@@ -1,0 +1,22 @@
+{
+    "name": "@alephhack/command-server-start",
+    "version": "0.0.1",
+    "private": true,
+    "main": "compiled/index.js",
+    "types": "types/index.d.ts",
+    "dependencies": {
+        "commander": "*",
+        "express": "*",
+        "ws": "*",
+        "jszip": "*"
+    },
+    "devDependencies": {
+        "typescript": "*",
+        "@types/node": "*",
+        "@types/express": "*",
+        "@types/ws": "*"
+    },
+    "scripts": {
+        "build": "tsc"
+    }
+}
