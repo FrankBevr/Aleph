@@ -11,6 +11,11 @@ export function useCommandVersion(
     });
 }
 
+/* TODO
+ * 1. read version from cli folder
+ * 2. get version from package.json
+ * 3. return current version 
+ */
 function getVersion(): String {
     return "0.1.0"
 }
