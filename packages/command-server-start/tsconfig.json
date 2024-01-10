@@ -12,7 +12,8 @@
             "ES2015"
         ],
         "resolveJsonModule": true,
-        "allowSyntheticDefaultImports": true
+        "allowSyntheticDefaultImports": true,
+        "skipLibCheck": true
     },
     "include": [
         "src/**/*"

@@ -7,6 +7,7 @@ import { useCommandCdnDeploy } from "@alephhack/command-cdn-deploy";
 import { useCommandCdnUndeploy } from "@alephhack/command-cdn-undeploy";
 import { useCommandProxyDeploy } from "@alephhack/command-proxy-deploy";
 import { useCommandProxyUndeploy } from "@alephhack/command-proxy-undeploy";
+import { useCommandProxyServe } from "@alephhack/command-proxy-serve";
 
 useCommandVersion(program);
 useCommandServerStart(program);
@@ -16,6 +17,7 @@ useCommandCdnDeploy(program);
 useCommandCdnUndeploy(program);
 useCommandProxyDeploy(program);
 useCommandProxyUndeploy(program);
+useCommandProxyServe(program);
 /*TODO
  * Add Command CdnUndeploy (removes folder from vhosts)
  * Add Command ProxyDeploy (only setup)

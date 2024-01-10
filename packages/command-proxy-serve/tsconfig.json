@@ -9,16 +9,19 @@
         "outDir": "compiled",
         "strict": true,
         "lib": [
-            "ES2015",
-            "DOM"
+            "ES2015"
         ],
         "resolveJsonModule": true,
-        "allowSyntheticDefaultImports": true,
         "allowJs": true,
-        "allowUmdGlobalAccess": true,
-        "jsx": "react-native"
+        "allowSyntheticDefaultImports": true,
+        "skipLibCheck": true
     },
     "include": [
         "src/**/*"
+    ],
+    "exclude": [
+        "node_modules/**/*",
+        "../node_modules/**/*",
+        "../../node_modules/**/*"
     ]
 }

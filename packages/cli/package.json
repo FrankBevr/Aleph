@@ -13,7 +13,8 @@
         "@alephhack/command-cdn-deploy": "*",
         "@alephhack/command-cdn-undeploy": "*",
         "@alephhack/command-proxy-deploy": "*",
-        "@alephhack/command-proxy-undeploy": "*"
+        "@alephhack/command-proxy-undeploy": "*",
+        "@alephhack/command-proxy-serve": "*"
     },
     "devDependencies": {
         "typescript": "*",

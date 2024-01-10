@@ -12,12 +12,12 @@ import * as os from "os";
 import * as fs from "fs";
 import { WebSocket } from "ws";
 /**
- * Validates and parses the provided options for CDN undeployment.
+ * Validates and parses the provided options for Proxy deployment.
  *
  * @param {any} opts - The options object potentially containing the deploy domain
- * @returns {CdnDeployOpts} Validated and parsed options.
+ * @returns {ProxyDeployOpts} Validated and parsed options.
  */
-function validateCdnUndeployOpts(opts) {
+function validateProxyDeployOpts(opts) {
     if (!opts.domain || typeof opts.domain !== 'string') {
         throw new Error("domain must be a string and is required");
     }
@@ -30,10 +30,10 @@ function validateCdnUndeployOpts(opts) {
         baseDomain: domainParts.slice(-2).join(".")
     };
 }
-function cdnUndeploy(opts) {
+function proxyDeploy(opts) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("CDN Undeploy");
-        const validatedOpts = validateCdnUndeployOpts(opts);
+        console.log("Proxy Deploy");
+        const validatedOpts = validateProxyDeployOpts(opts);
         const deployKeyPath = path.join(os.homedir(), ".alephhack2024", "domains", validatedOpts.baseDomain, "deploy-key");
         const wsPortPath = path.join(os.homedir(), ".alephhack2024", "domains", validatedOpts.baseDomain, "ws-port");
         if (!fs.existsSync(deployKeyPath)) {
@@ -78,14 +78,14 @@ function cdnUndeploy(opts) {
                         throw new Error("Authentication failed, received: " + response);
                     }
                     ws.send(JSON.stringify({
-                        method: "cdn-undeploy",
+                        method: "proxy-deploy",
                         domain: validatedOpts.domain
                     }));
                     const response2 = yield nextMessage();
                     if (response2 !== "true") {
-                        throw new Error("CDN undeploy failed, received: " + response2);
+                        throw new Error("Proxy deploy failed, received: " + response2);
                     }
-                    console.log("CDN undeploy successful!");
+                    console.log("Proxy deploy successful!");
                 });
             }
             handleClient()
@@ -106,15 +106,15 @@ function cdnUndeploy(opts) {
     });
 }
 /* TODO
- * 1. Make sure that undeploy only takes a single domain asa option
- * 2. Connect over websocket and cdn undeploy command
- * HINT: Look at CDN DEPLOY for reference
+ * 1. Make sure that deploy only takes a single domain asa option
+ * 2. Connect over websocket and proxy deploy command
+ * HINT: Look at Proxy DEPLOY for reference
  */
-export function useCommandCdnUndeploy(parentCommand) {
+export function useCommandProxyDeploy(parentCommand) {
     var _a;
-    const cdnCommand = (_a = parentCommand.commands.find((command) => command.name() === "cdn")) !== null && _a !== void 0 ? _a : parentCommand.command("cdn");
-    const undeployCommand = cdnCommand.command("undeploy");
-    undeployCommand.description("Undeploys website");
-    undeployCommand.option("-d, --domain <domain>", "Domain name");
-    undeployCommand.action(cdnUndeploy);
+    const proxyCommand = (_a = parentCommand.commands.find((command) => command.name() === "proxy")) !== null && _a !== void 0 ? _a : parentCommand.command("proxy");
+    const deployCommand = proxyCommand.command("deploy");
+    deployCommand.description("Deploys a proxy");
+    deployCommand.option("-d, --domain <domain>", "Domain name");
+    deployCommand.action(proxyDeploy);
 }

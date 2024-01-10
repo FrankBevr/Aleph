@@ -9,6 +9,7 @@ import {
     WebSocket
 } from "ws";
 import JSZip from "jszip";
+import bodyParser from "body-parser";
 
 /** This interface is essential for ensuring that all necessary configurations are provided and valid for the server to start properly. Each property is carefully validated within the checkOpts function to ensure the server starts with correct and sensible settings. */
 interface CheckedStartOpts {
@@ -327,6 +328,9 @@ async function handleCdnVhostRequest(
 
 /** Used to represent a HTTP request that is being proxied through the server. It captures essential details of an incoming HTTP request. */
 type ProxiedRequest = {
+    /** A unique identifier for the request */
+    id: string;
+
     /**
      * The HTTP method of the request, e.g., 'GET', 'POST', 'PUT', etc.
      */
@@ -352,6 +356,9 @@ type ProxiedRequest = {
 }
 /** Used to represent a HTTP response that is being sent back from the proxy server to the client. */
 type ProxiedResponse = {
+    /** A unique identifier for the response */
+    id: string;
+
     /**
      * The status code of the response, e.g., 200 for success, 404 for not found, etc.
      */
@@ -368,12 +375,16 @@ type ProxiedResponse = {
     body: string;
 }
 /** A function type used for handling proxied requests. */
-type ProxyListener = (
+type ProxyListenerMethod = (
     /**
      * The incoming proxied request.
      */
     request: ProxiedRequest
 ) => Promise<ProxiedResponse>;
+interface ProxyListener {
+    onMessage: ProxyListenerMethod;
+    close: () => void;
+}
 /** Used to represent a client that has connected to the WebSocket server. It holds information about the connection status and the WebSocket instance. */
 type ConnectedWebSocketClient = {
     /**
@@ -556,10 +567,11 @@ function createVhostMiddleware(
             const proxyListener = server.getProxyListener(vhost);
             if (!proxyListener) {
                 console.log("No proxy listener found");
-                next();
+                res.status(503).send("No proxy listener found");
                 return;
             }
             const proxiedRequest: ProxiedRequest = {
+                id: Math.random().toString(36).substring(7) + Math.random().toString(36).substring(7),
                 method: req.method,
                 path: req.path,
                 headers: {},
@@ -570,15 +582,23 @@ function createVhostMiddleware(
             }
             if (typeof req.body === "string") {
                 proxiedRequest.body = req.body;
-            } else {
-                proxiedRequest.body = JSON.stringify(req.body);
             }
-            const proxiedResponse = await proxyListener(proxiedRequest);
-            res.status(proxiedResponse.statusCode);
-            for (const [key, value] of Object.entries(proxiedResponse.headers)) {
-                res.header(key, value);
+            try {
+                const proxiedResponse = await proxyListener.onMessage(proxiedRequest);
+                res.status(proxiedResponse.statusCode);
+                for (const [key, value] of Object.entries(proxiedResponse.headers)) {
+                    res.header(key, value);
+                }
+                res.send(proxiedResponse.body);
+            } catch (err) {
+                const errMessage = `${err}` ?? "Unknown error";
+                const isTimeoutError = errMessage.includes("Proxy request timed out");
+                if (isTimeoutError) {
+                    res.status(504).send("Proxy request timed out");
+                } else {
+                    res.status(500).send(`An error occurred: ${errMessage}`);
+                }
             }
-            res.send(proxiedResponse.body);
             return;
         } else {
             console.log("Unknown vhost type: ", vhostConfig.type);
@@ -702,6 +722,108 @@ async function cdnUndeploy(
  * 1.3 clear the director 
  * 1.4 it should be a single json object that has the following `{"type": "proxy"}`
  */
+async function proxyDeploy(
+    server: IngressServer,
+    domain: string,
+): Promise<void> {
+    console.log("Proxy deploy");
+
+    // Resolve the path for the domain's vhost directory.
+    const vhostDirectory = path.resolve(server.serverDir.vhostsPath, domain);
+    const vhostConfigPath = path.resolve(vhostDirectory, "vhost.json");
+    const vhostConfig = { type: "proxy" };
+
+    // Remove the existing vhost directory if it exists to ensure a clean deployment.
+    if (fs.existsSync(vhostDirectory)) {
+        fs.rmSync(vhostDirectory, { recursive: true });
+    }
+
+    // Create the new CDN directory.
+    fs.mkdirSync(vhostDirectory);
+
+    // Create or overwrite the vhost.json file with CDN type configuration.
+    fs.writeFileSync(vhostConfigPath, JSON.stringify(vhostConfig));
+}
+
+async function proxyUndeploy(
+    server: IngressServer,
+    domain: string,
+): Promise<void> {
+    console.log("Proxy undeploy");
+
+    // Resolve the path to the vhost directory for the specified domain.
+    const vhostDirectory = path.resolve(server.serverDir.vhostsPath, domain);
+
+    // Check if the CDN directory for the domain exists.
+    if (fs.existsSync(vhostDirectory)) {
+        // If the directory exists, remove it recursively.
+        // This includes all files and subdirectories in the CDN deployment.
+        fs.rmSync(vhostDirectory, { recursive: true });
+    }
+}
+
+async function proxyServe(
+    server: IngressServer,
+    domain: string,
+    ws: WebSocket
+): Promise<void> {
+    console.log("Proxy serve");
+
+    // Resolve the path for the domain's vhost directory.
+    const vhostDirectory = path.resolve(server.serverDir.vhostsPath, domain);
+    const vhostConfigPath = path.resolve(vhostDirectory, "vhost.json");
+
+    if (!fs.existsSync(vhostConfigPath)) {
+        console.log("Domain is not a proxy: ", domain);
+        return;
+    }
+
+    const vhostConfig = JSON.parse(fs.readFileSync(vhostConfigPath).toString("utf-8"));
+
+    if (vhostConfig.type !== "proxy") {
+        console.log("Domain is not a proxy: ", domain);
+        return;
+    }
+
+    // See if there is already a listener
+    const proxyListener = server.getProxyListener(domain);
+
+    if (proxyListener) {
+        console.log("Closing existing proxy listener ...");
+        proxyListener.close();
+        return;
+    }
+
+    console.log("Creating new proxy listener ...");
+    const newProxyListener: ProxyListener = {
+        onMessage: async (request) => {
+            console.log("Proxy listener onMessage");
+            const promise: Promise<ProxiedResponse> = new Promise((resolve, reject) => {
+                const handleMessage = (message: Buffer) => {
+                    const proxiedResponse = JSON.parse(message.toString("utf-8")) as ProxiedResponse;
+                    if (proxiedResponse.id !== request.id) {
+                        return;
+                    }
+                    ws.off("message", handleMessage);
+                    resolve(proxiedResponse);
+                };
+                ws.on("message", handleMessage);
+                ws.send(JSON.stringify(request));
+                setTimeout(() => {
+                    ws.off("message", handleMessage);
+                    reject("Proxy request timed out");
+                }, 30000);
+            });
+            return await promise;
+        },
+        close: () => {
+            console.log("Proxy listener close");
+            server.removeProxyListener(domain);
+        },
+    };
+
+    server.addProxyListener(domain, newProxyListener);
+}
 
 /*TODO
  * 1. Write proxy deploy cli command
@@ -711,11 +833,11 @@ async function cdnUndeploy(
  */
 
 type AuthenticatedMessage = {
-    method: "cdn-deploy" | "cdn-undeploy" | "proxy-deploy" | "proxy-undeploy" | "proxy-serve";
+    method: "cdn-deploy" | "cdn-undeploy" | "proxy-deploy" | "proxy-undeploy" | "proxy-serve" | "proxy-response";
     domain: string;
 
     cdnContentZipBase64?: string;
-}
+} & Partial<ProxiedResponse>;
 
 function onWebSocketConnection(
     server: IngressServer,
@@ -803,13 +925,61 @@ function onWebSocketConnection(
                 });
             } else if (authenticatedMessage.method === "proxy-deploy") {
                 console.log("WS client sent proxy-deploy message");
-                ws.send(JSON.stringify(false));
+                if (!authenticatedMessage.domain) {
+                    console.log("WS client sent invalid message");
+                    ws.close();
+                    return;
+                }
+
+                proxyDeploy(
+                    server,
+                    authenticatedMessage.domain,
+                ).then(() => {
+                    ws.send(JSON.stringify(true));
+                }).catch((err) => {
+                    console.log("Proxy deploy failed: ", err);
+                    ws.send(JSON.stringify(false));
+                });
             } else if (authenticatedMessage.method === "proxy-undeploy") {
                 console.log("WS client sent proxy-undeploy message");
-                ws.send(JSON.stringify(false));
+                if (!authenticatedMessage.domain) {
+                    console.log("WS client sent invalid message");
+                    ws.close();
+                    return;
+                }
+
+                proxyUndeploy(
+                    server,
+                    authenticatedMessage.domain,
+                ).then(() => {
+                    ws.send(JSON.stringify(true));
+                }).catch((err) => {
+                    console.log("Proxy undeploy failed: ", err);
+                    ws.send(JSON.stringify(false));
+                });
             } else if (authenticatedMessage.method === "proxy-serve") {
                 console.log("WS client sent proxy-serve message");
-                ws.send(JSON.stringify(false));
+
+                if (!authenticatedMessage.domain) {
+                    console.log("WS client sent invalid message");
+                    ws.close();
+                    return;
+                }
+
+                proxyServe(
+                    server,
+                    authenticatedMessage.domain,
+                    ws,
+                ).then(() => {
+                    ws.send(JSON.stringify(true));
+                }).catch((err) => {
+                    console.log("Proxy serve failed: ", err);
+                    ws.send(JSON.stringify(false));
+                });
+            } else if (authenticatedMessage.method === "proxy-response") {
+                console.log("WS client sent proxy-response message");
+                // Do nothing, it is handled by the proxy listener
+
             } else {
                 console.log("WS client sent invalid message");
                 ws.close();
@@ -853,6 +1023,10 @@ async function serverStart(opts: any) {
                 res.redirect(`https://${req.hostname}:${checkedOpts.httpsPort}${req.url}`);
             }
         }
+    );
+
+    app.use(
+        bodyParser.text({ type: "*/*" })
     );
 
     app.use(
