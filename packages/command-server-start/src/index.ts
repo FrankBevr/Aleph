@@ -9,6 +9,7 @@ import {
     WebSocket
 } from "ws";
 import JSZip from "jszip";
+import bodyParser from "body-parser";
 
 /** This interface is essential for ensuring that all necessary configurations are provided and valid for the server to start properly. Each property is carefully validated within the checkOpts function to ensure the server starts with correct and sensible settings. */
 interface CheckedStartOpts {
@@ -566,7 +567,7 @@ function createVhostMiddleware(
             const proxyListener = server.getProxyListener(vhost);
             if (!proxyListener) {
                 console.log("No proxy listener found");
-                next();
+                res.status(503).send("No proxy listener found");
                 return;
             }
             const proxiedRequest: ProxiedRequest = {
@@ -581,15 +582,23 @@ function createVhostMiddleware(
             }
             if (typeof req.body === "string") {
                 proxiedRequest.body = req.body;
-            } else {
-                proxiedRequest.body = JSON.stringify(req.body);
             }
-            const proxiedResponse = await proxyListener.onMessage(proxiedRequest);
-            res.status(proxiedResponse.statusCode);
-            for (const [key, value] of Object.entries(proxiedResponse.headers)) {
-                res.header(key, value);
+            try {
+                const proxiedResponse = await proxyListener.onMessage(proxiedRequest);
+                res.status(proxiedResponse.statusCode);
+                for (const [key, value] of Object.entries(proxiedResponse.headers)) {
+                    res.header(key, value);
+                }
+                res.send(proxiedResponse.body);
+            } catch (err) {
+                const errMessage = `${err}` ?? "Unknown error";
+                const isTimeoutError = errMessage.includes("Proxy request timed out");
+                if (isTimeoutError) {
+                    res.status(504).send("Proxy request timed out");
+                } else {
+                    res.status(500).send(`An error occurred: ${errMessage}`);
+                }
             }
-            res.send(proxiedResponse.body);
             return;
         } else {
             console.log("Unknown vhost type: ", vhostConfig.type);
@@ -796,9 +805,14 @@ async function proxyServe(
                         return;
                     }
                     ws.off("message", handleMessage);
-
+                    resolve(proxiedResponse);
                 };
                 ws.on("message", handleMessage);
+                ws.send(JSON.stringify(request));
+                setTimeout(() => {
+                    ws.off("message", handleMessage);
+                    reject("Proxy request timed out");
+                }, 30000);
             });
             return await promise;
         },
@@ -819,11 +833,11 @@ async function proxyServe(
  */
 
 type AuthenticatedMessage = {
-    method: "cdn-deploy" | "cdn-undeploy" | "proxy-deploy" | "proxy-undeploy" | "proxy-serve";
+    method: "cdn-deploy" | "cdn-undeploy" | "proxy-deploy" | "proxy-undeploy" | "proxy-serve" | "proxy-response";
     domain: string;
 
     cdnContentZipBase64?: string;
-}
+} & Partial<ProxiedResponse>;
 
 function onWebSocketConnection(
     server: IngressServer,
@@ -962,6 +976,10 @@ function onWebSocketConnection(
                     console.log("Proxy serve failed: ", err);
                     ws.send(JSON.stringify(false));
                 });
+            } else if (authenticatedMessage.method === "proxy-response") {
+                console.log("WS client sent proxy-response message");
+                // Do nothing, it is handled by the proxy listener
+
             } else {
                 console.log("WS client sent invalid message");
                 ws.close();
@@ -1005,6 +1023,10 @@ async function serverStart(opts: any) {
                 res.redirect(`https://${req.hostname}:${checkedOpts.httpsPort}${req.url}`);
             }
         }
+    );
+
+    app.use(
+        bodyParser.text({ type: "*/*" })
     );
 
     app.use(

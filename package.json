@@ -12,7 +12,8 @@
     "jszip": "3.10.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "ws": "8.16.0"
+    "ws": "8.16.0",
+    "body-parser": "1.20.2"
   },
   "devDependencies": {
     "@types/express": "4.17.21",
@@ -27,7 +28,7 @@
     "vitepress": "^1.0.0-rc.36"
   },
   "scripts": {
-    "build:lib": "npm run -w @alephhack/command-version build && npm run -w @alephhack/command-server-setup build && npm run -w @alephhack/command-server-start build && npm run -w @alephhack/command-server-connect build && npm run -w @alephhack/command-cdn-deploy build && npm run -w @alephhack/command-cdn-undeploy build && npm run -w @alephhack/command-proxy-deploy build && npm run -w @alephhack/command-proxy-undeploy build",
+    "build:lib": "npm run -w @alephhack/command-version build && npm run -w @alephhack/command-server-setup build && npm run -w @alephhack/command-server-start build && npm run -w @alephhack/command-server-connect build && npm run -w @alephhack/command-cdn-deploy build && npm run -w @alephhack/command-cdn-undeploy build && npm run -w @alephhack/command-proxy-deploy build && npm run -w @alephhack/command-proxy-undeploy build && npm run -w @alephhack/command-proxy-serve build",
     "build:cli": "npm run -w @alephhack/cli build",
     "build": "npm run build:lib && npm run build:cli",
     "package": "npm run -w @alephhack/cli package",
