@@ -5,21 +5,21 @@ layout: home
 hero:
   name: "Aleph"
   text: "CTRL+Hack+ZK"
-  tagline: My great project tagline
+  tagline: 
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
+      text: Github
+      link: https://github.com/frankbevr/aleph
     - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: Video
+      link: https://www.youtube.com/watch?v=m6nPJyGrpiM
 
 features:
-  - title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - title: 🪙 Deploy Coin
+    details: Decentralised Deploy cli
+  - title: 🐕 Dogo
+    details: Dog fighting Simulation Game
+  - title: 💲 Incento
+    details: Ai Reward System
 ---
 

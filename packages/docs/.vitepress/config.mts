@@ -7,22 +7,34 @@ export default defineConfig({
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
-      { text: 'Home', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' }
+      { text: 'Deploy Coin', link: '/01-DeployCoin/01-Summary' },
+      { text: 'Dogo', link: '/02-Dogo/01-Summary' },
+      { text: 'Incento', link: '/03-Incento/01-Summary' }
     ],
 
     sidebar: [
       {
-        text: 'Examples',
+        text: 'Deploy Coin',
         items: [
-          { text: 'Markdown Examples', link: '/markdown-examples' },
-          { text: 'Runtime API Examples', link: '/api-examples' }
+          { text: 'Summary', link: '/01-DeployCoin/01-Summary' },
+        ]
+      },
+      {
+        text: 'Dogo',
+        items: [
+          { text: 'Summary', link: '/02-Dogo/01-Summary' },
+        ]
+      },
+      {
+        text: 'Incento',
+        items: [
+          { text: 'Summary', link: '/03-Incento/01-Summary' },
         ]
       }
     ],
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
+      { icon: 'github', link: 'https://github.com/frankbevr/Aleph' }
     ]
   }
 })
