@@ -1,0 +1,17 @@
+{
+    "name": "@alephhack/command-proxy-deploy",
+    "version": "0.0.1",
+    "private": true,
+    "main": "compiled/index.js",
+    "types": "types/index.d.ts",
+    "dependencies": {
+        "commander": "*"
+    },
+    "devDependencies": {
+        "typescript": "*",
+        "@types/node": "*"
+    },
+    "scripts": {
+        "build": "tsc"
+    }
+}

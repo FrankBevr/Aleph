@@ -11,7 +11,9 @@
         "@alephhack/command-server-setup": "*",
         "@alephhack/command-server-connect": "*",
         "@alephhack/command-cdn-deploy": "*",
-        "@alephhack/command-cdn-undeploy": "*"
+        "@alephhack/command-cdn-undeploy": "*",
+        "@alephhack/command-proxy-deploy": "*",
+        "@alephhack/command-proxy-undeploy": "*"
     },
     "devDependencies": {
         "typescript": "*",
