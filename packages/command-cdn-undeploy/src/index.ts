@@ -19,7 +19,6 @@ export function useCommandCdnUndeploy(
     const versionCommand = parentCommand.command("undeploy");
     versionCommand.description("Undeploys website");
     versionCommand.action(() => {
-        console.log(version);
     });
 }
 

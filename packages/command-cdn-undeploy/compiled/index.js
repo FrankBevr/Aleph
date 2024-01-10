@@ -1,11 +1,25 @@
-export function useCommandVersion(parentCommand) {
-    const version = getVersion();
-    const versionCommand = parentCommand.command("version");
-    versionCommand.description("Prints the version of the CLI");
+/* TODO
+ * 1. Make sure that undeploy only takes a single domain asa option
+ * 2. Connect over websocket and cdn undeploy command
+ * HINT: Look at CDN DEPLOY for reference
+ */
+export function useCommandCdnUndeploy(parentCommand) {
+    var _a;
+    const cdnCommand = (_a = parentCommand.commands.find((command) => command.name() === "cdn")) !== null && _a !== void 0 ? _a : parentCommand.command("cdn");
+    const versionCommand = parentCommand.command("undeploy");
+    versionCommand.description("Undeploys website");
     versionCommand.action(() => {
-        console.log(version);
     });
 }
-function getVersion() {
-    return "0.1.0";
-}
+// export function useCommandCdnDeploy(
+//     parentCommand: Command
+// ): void {
+//
+//     const cdnCommand = parentCommand.commands.find((command) => command.name() === "cdn")
+//         ?? parentCommand.command("cdn");
+//     const cdnDeployCommand = cdnCommand.command("deploy");
+//     cdnDeployCommand.description("Deploy a static app to the CDN");
+//     cdnDeployCommand.option("--deploy-dir <deployDir>", "The directory to deploy");
+//     cdnDeployCommand.option("--deploy-domain <deployDomain>", "The domain to deploy under");
+//     cdnDeployCommand.action(cdnDeploy);
+// }

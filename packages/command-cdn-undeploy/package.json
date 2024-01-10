@@ -1,5 +1,5 @@
 {
-    "name": "@alephhack/command-version",
+    "name": "@alephhack/command-cdn-undeploy",
     "version": "0.0.1",
     "private": true,
     "main": "compiled/index.js",
