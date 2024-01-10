@@ -1,10 +1,6 @@
 import { Command } from "commander";
-
-interface CdnDeployOpts {
-    deployDir: string;
-    deployDomain: string;
-    deployBaseDomain: string;
-}
+import { existsSync, rmdirSync } from "fs";
+import path from "path";
 
 /* TODO
  * 1. Make sure that undeploy only takes a single domain asa option
@@ -16,22 +12,21 @@ export function useCommandCdnUndeploy(
 ): void {
     const cdnCommand = parentCommand.commands.find((command) => command.name() === "cdn")
         ?? parentCommand.command("cdn");
-    const versionCommand = parentCommand.command("undeploy");
-    versionCommand.description("Undeploys website");
-    versionCommand.action(() => {
-        console.log(version);
+    const undeployCommand = cdnCommand.command("undeploy");
+    undeployCommand.description("Undeploys website");
+    undeployCommand.option("-d, --domain <domain>", "Domain name");
+    undeployCommand.option("-p, --path <path>", "Directory path of vHosts");
+    undeployCommand.action((options) => {
+        const { domain, path } = options;
+        deleteVhostDir(domain, path);
     });
 }
-
-// export function useCommandCdnDeploy(
-//     parentCommand: Command
-// ): void {
-//
-//     const cdnCommand = parentCommand.commands.find((command) => command.name() === "cdn")
-//         ?? parentCommand.command("cdn");
-//     const cdnDeployCommand = cdnCommand.command("deploy");
-//     cdnDeployCommand.description("Deploy a static app to the CDN");
-//     cdnDeployCommand.option("--deploy-dir <deployDir>", "The directory to deploy");
-//     cdnDeployCommand.option("--deploy-domain <deployDomain>", "The domain to deploy under");
-//     cdnDeployCommand.action(cdnDeploy);
-// }
+function deleteVhostDir(domainName: string, directory: string): void {
+    const folderPath = path.join(directory, domainName);
+    if (existsSync(folderPath)) {
+        rmdirSync(folderPath, { recursive: true });
+        console.log(`Domain '${domainName}' deleted successfully.`);
+    } else {
+        console.log(`Domain '${domainName}' does not exist.`);
+    }
+}

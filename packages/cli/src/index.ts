@@ -4,6 +4,7 @@ import { useCommandServerStart } from "@alephhack/command-server-start";
 import { useCommandServerSetup } from "@alephhack/command-server-setup";
 import { useCommandServerConnect } from "@alephhack/command-server-connect";
 import { useCommandCdnDeploy } from "@alephhack/command-cdn-deploy";
+import { useCommandCdnUndeploy } from "@alephhack/command-cdn-undeploy";
 
 useCommandVersion(program);
 useCommandServerStart(program);

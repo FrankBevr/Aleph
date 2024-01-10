@@ -10,7 +10,8 @@
         "@alephhack/command-server-start": "*",
         "@alephhack/command-server-setup": "*",
         "@alephhack/command-server-connect": "*",
-        "@alephhack/command-cdn-deploy": "*"
+        "@alephhack/command-cdn-deploy": "*",
+        "@alephhack/command-cdn-undeploy": "*"
     },
     "devDependencies": {
         "typescript": "*",
