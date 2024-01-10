@@ -1,5 +1,5 @@
 import { Command } from "commander";
-import { readFileSync } from "fs";
+import ROOT_PACKAGE_JSON from "../../../package.json";
 
 export function useCommandVersion(
     parentCommand: Command
@@ -18,7 +18,5 @@ export function useCommandVersion(
 * 3. return current version 
 */
 function getVersion(): string {
-    const rootPackageJsonPath = "../../../package.json";
-    const rootPackageJson = JSON.parse(readFileSync(rootPackageJsonPath, "utf-8"));
-    return rootPackageJson.version;
+    return ROOT_PACKAGE_JSON.version;
 }

@@ -15,8 +15,6 @@
     "ws": "8.16.0"
   },
   "devDependencies": {
-    "@parcel/packager-ts": "^2.11.0",
-    "@parcel/transformer-typescript-types": "^2.11.0",
     "@types/express": "4.17.21",
     "@types/node": "20.10.6",
     "@types/react": "18.2.47",
@@ -24,18 +22,18 @@
     "@types/ws": "8.5.10",
     "concurrently": "8.2.2",
     "esbuild": "0.19.11",
-    "parcel": "2.11.0",
     "pkg": "5.8.1",
     "typescript": "5.3.3",
     "vitepress": "^1.0.0-rc.36"
   },
   "scripts": {
-    "build:lib": "npm run -w @alephhack/command-version build && npm run -w @alephhack/command-server-setup build && npm run -w @alephhack/command-server-start build && npm run -w @alephhack/command-server-connect build && npm run -w @alephhack/command-cdn-deploy build",
+    "build:lib": "npm run -w @alephhack/command-version build && npm run -w @alephhack/command-server-setup build && npm run -w @alephhack/command-server-start build && npm run -w @alephhack/command-server-connect build && npm run -w @alephhack/command-cdn-deploy build && npm run -w @alephhack/command-cdn-undeploy build && npm run -w @alephhack/command-proxy-deploy build && npm run -w @alephhack/command-proxy-undeploy build",
     "build:cli": "npm run -w @alephhack/cli build",
     "build": "npm run build:lib && npm run build:cli",
     "package": "npm run -w @alephhack/cli package",
-    "docs:dev": "vitepress dev packages/docs",
-    "docs:build": "vitepress build packages/docs",
-    "docs:preview": "vitepress preview packages/docs"
+    "docs:dev": "npm run -w @alephhack/docs dev",
+    "docs:build": "npm run -w @alephhack/docs build",
+    "docs:preview": "npm run -w @alephhack/docs preview",
+    "cli": "npm run -w @alephhack/cli start"
   }
 }

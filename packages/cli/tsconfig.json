@@ -11,7 +11,8 @@
         "lib": [
             "ES2015"
         ],
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "skipLibCheck": true
     },
     "include": [
         "src/**/*"

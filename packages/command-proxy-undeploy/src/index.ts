@@ -1,6 +1,6 @@
 import { Command } from "commander";
 
-export function useCommandProxyUneploy(
+export function useCommandProxyUndeploy(
     parentCommand: Command
 ): void {
     const proxyCommand = parentCommand.commands.find((command) => command.name() === "cdn")
