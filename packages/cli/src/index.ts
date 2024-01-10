@@ -10,5 +10,11 @@ useCommandServerStart(program);
 useCommandServerSetup(program);
 useCommandServerConnect(program);
 useCommandCdnDeploy(program);
-
+useCommandCdnUndeploy(program);
+/*TODO
+ * Add Command CdnUndeploy
+ * Add Command ProxyDeploy
+ * Add Command ProxyUnDeploy
+ * Add Command ProxyServe
+ */
 program.parse(process.argv);

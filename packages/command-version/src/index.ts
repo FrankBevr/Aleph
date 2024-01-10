@@ -3,11 +3,19 @@ import { Command } from "commander";
 export function useCommandVersion(
     parentCommand: Command
 ): void {
-
+    const version = getVersion()
     const versionCommand = parentCommand.command("version");
     versionCommand.description("Prints the version of the CLI");
     versionCommand.action(() => {
-        console.log("Version !UNKNOWN!");
+        console.log(version);
     });
+}
 
+/* TODO
+ * 1. read version from cli folder
+ * 2. get version from package.json
+ * 3. return current version 
+ */
+function getVersion(): String {
+    return "0.1.0"
 }

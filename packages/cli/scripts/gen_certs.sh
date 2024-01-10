@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Set the domain variable and passphrase
-CERT_DOMAIN="*.domain.com"
-KEY_PASS="your_secure_passphrase"  # Replace with your actual secure passphrase
+CERT_DOMAIN="*.test.internal"
+KEY_PASS="abc"  # Replace with your actual secure passphrase
 
 # Generate CA key and certificate
 openssl genrsa -des3 -passout pass:$KEY_PASS -out ca.private.key 2048
