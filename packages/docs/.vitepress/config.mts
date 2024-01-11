@@ -3,7 +3,9 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: "Deploy Cash",
   description: "CTRL+Hack+ZK",
+  head: [['link', { rel: 'icon', href: 'https://i.ibb.co/3hfWWJ4/72b3fcb3-dd6a-4908-965f-91295ac41470.webp' }]],
   themeConfig: {
+    logo: "https://i.ibb.co/3hfWWJ4/72b3fcb3-dd6a-4908-965f-91295ac41470.webp",
     nav: [
       { text: 'Intro', link: '../01-Intro/01-Summary' },
       { text: 'Main', link: '../02-Main/00-Overview' },

@@ -15,7 +15,7 @@
 - [X] (docs) do some docs
 - [X] (docs) make notes about Opening Ceremony
 
-** [#B] Clean Up [7/8]
+** [#B] Clean Up [10/11]
 
 - [X] Etablish Journal
 - [X] rename to deploy.cash
@@ -28,3 +28,6 @@
 - [X] create docs for Incento
 - [X] update index for DeployCash
 - [X] update structure for DeployCash
+- [X] create logo for incento
+- [X] create logo for dogo
+- [X] create logo for deploycash

@@ -4,6 +4,9 @@ layout: home
 hero:
   name: "Deploy Cash"
   tagline: Your secure deployment CLI
+  image:
+    src: "https://i.ibb.co/3hfWWJ4/72b3fcb3-dd6a-4908-965f-91295ac41470.webp"
+    alr: DeployCashLogo
   actions:
     - theme: brand
       text: Read here
