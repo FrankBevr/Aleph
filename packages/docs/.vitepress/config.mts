@@ -17,6 +17,7 @@ export default defineConfig({
         text: 'Deploy Coin',
         items: [
           { text: 'Summary', link: '/01-DeployCoin/01-Summary' },
+          { text: "Milestone 1", link: '/05-M1-Journal/01-Journal' },
         ]
       },
       {
