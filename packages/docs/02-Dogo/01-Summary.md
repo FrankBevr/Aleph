@@ -1,3 +1,0 @@
-# Dogo
-
-This is Dogo 

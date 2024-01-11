@@ -1,3 +1,0 @@
-# Incento 
-
-This is Incento
