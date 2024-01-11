@@ -31,6 +31,12 @@ export default defineConfig({
         items: [
           { text: 'Summary', link: '/03-Incento/01-Summary' },
         ]
+      },
+      {
+        text: 'Milestone 1',
+        items: [
+          { text: 'Journal', link: '/05-M1-Journal/01-Journal' },
+        ]
       }
     ],
 
