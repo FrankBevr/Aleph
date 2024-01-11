@@ -1,27 +1,22 @@
 ---
-# https://vitepress.dev/reference/default-theme-home-page
 layout: home
 
 hero:
-  name: "Aleph"
-  text: "CTRL+Hack+ZK"
-  tagline: 
+  name: "Deploy Cash"
+  tagline: Your secure deployment CLI
   actions:
     - theme: brand
-      text: Github
-      link: https://github.com/frankbevr/aleph
+      text: Read here
+      link: /01-Intro/01-Summary.md
     - theme: alt
       text: Video
       link: https://www.youtube.com/watch?v=m6nPJyGrpiM
-    - theme: alt
-      text: Milestone 1
-      link: /05-M1-Journal/01-Journal
 features:
-  - title: 🪙 Deploy Coin
+  - title: 💻 CLI
     details: Decentralised Deploy cli
-  - title: 🐕 Dogo
-    details: Dog fighting Simulation Game
-  - title: 💲 Incento
-    details: Ai Reward System
+  - title: 🔒 Secure
+    details: Out of the box proxies 
+  - title: 🪙 Native Token
+    details: Payment via native tokens
 ---
 
