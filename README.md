@@ -1,8 +1,8 @@
 <div align="center">
-<img src="https://i.ibb.co/hLm8CT4/3c18a161-da07-45cc-8642-56ea26ef335f.webp" alt="logo" width="120" height="120" />
+<img src="https://i.ibb.co/3hfWWJ4/72b3fcb3-dd6a-4908-965f-91295ac41470.webp" alt="logo" width="120" height="120" />
 </div>
 
-<h3 align="center">Inkora</h3>
+<h3 align="center">Deploy Cash</h3>
   <p align="center">
   Aleph Hack
         <br />
@@ -16,19 +16,6 @@
   </p>
 </div>
 
-## Preamble
-
-We created 3 Projects for 3 Challenges.
-
-- GAMING : We created Dogo
-- TELCO + TOOLING Infrastructure : We created DeployCoin
-- DEGEN / DEFI : We created Incento
-
-##  Projects 
-
-<details>
-<summary>Dogo - Read about Dogo</summary>
-
 ### Screenshot
 
 ![Screenshot]()
@@ -43,45 +30,6 @@ w.i.p
 
 w.i.p
 
-</details>
-
-<details>
-<summary>DeployCoin - Read about Deploy Coin</summary>
-
-### Screenshot
-
-![Screenshot]()
-
-w.i.p.
-
-### Summary
-
-w.i.p
-
-### Quickstart
-
-w.i.p
-
-</details>
-
-<details>
-<summary>Incento - Read about Incento</summary>
-
-### Screenshot
-
-![Screenshot]()
-
-w.i.p.
-
-### Summary
-
-w.i.p
-
-### Quickstart
-
-w.i.p
-
-</details>
 
 ## Team
 

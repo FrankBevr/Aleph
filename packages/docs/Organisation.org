@@ -1,0 +1,26 @@
+#+title: Organisation
+#+COLUMNS: %50ITEM(Task) %7TODO %14CLOCKSUM(Clock)
+
+* Organisation
+
+** [#B] Small Contribution [9/9]
+
+- [X] (command-version) add getVersion()
+- [X] (command-cdn-undeploy) make export work
+- [X] (cli) import undeploy command correctly
+- [X] (cpmmand-cdn-undeploy) create undeploy function
+- [X] (cli) add & setup command-proxy-deploy, command-proxy-undeploy
+- [X] (cli) setup command-proxy-deploy, command-proxy-undeploy
+- [X] (./README) write something
+- [X] (docs) do some docs
+- [X] (docs) make notes about Opening Ceremony
+
+** [#B] Clean Up [3/4]
+
+- [X] Etablish Journal
+- [X] rename to deploy.cash
+- [X] buy deploy.cash domain
+- [-] split it in 3 repos
+  - [X] create deployCash
+  - [ ] create Dogo
+  - [ ] (Optional) create Incento
