@@ -1,0 +1,10 @@
+{
+    "name": "@deploycash/contracts",
+    "version": "0.0.1",
+    "private": true,
+    "dependencies": {},
+    "devDependencies": {},
+    "scripts": {
+        "node": "substrate-contracts-node --dev --base-path ./.node-data"
+    }
+}
