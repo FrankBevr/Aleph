@@ -5,6 +5,9 @@
     "dependencies": {},
     "devDependencies": {},
     "scripts": {
-        "node": "substrate-contracts-node --dev --base-path ./.node-data"
+        "node": "substrate-contracts-node --dev --base-path ./.node-data",
+        "cargo:contract-build": "cargo contract build --target wasm --release --manifest-path src/deploycash/Cargo.toml",
+        "cargo:build": "cargo build --release",
+        "build": "npm run cargo:build && npm run cargo:contract-build"
     }
 }

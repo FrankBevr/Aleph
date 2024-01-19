@@ -30,11 +30,13 @@
   "scripts": {
     "build:lib": "npm run -w @alephhack/command-version build && npm run -w @alephhack/command-server-setup build && npm run -w @alephhack/command-server-start build && npm run -w @alephhack/command-server-connect build && npm run -w @alephhack/command-cdn-deploy build && npm run -w @alephhack/command-cdn-undeploy build && npm run -w @alephhack/command-proxy-deploy build && npm run -w @alephhack/command-proxy-undeploy build && npm run -w @alephhack/command-proxy-serve build",
     "build:cli": "npm run -w @alephhack/cli build",
+    "build:contracts": "npm run -w @deploycash/contracts build",
     "build": "npm run build:lib && npm run build:cli",
     "package": "npm run -w @alephhack/cli package",
     "docs:dev": "npm run -w @alephhack/docs dev",
     "docs:build": "npm run -w @alephhack/docs build",
     "docs:preview": "npm run -w @alephhack/docs preview",
-    "cli": "npm run -w @alephhack/cli start"
+    "cli": "npm run -w @alephhack/cli start",
+    "dev:node": "npm run -w @deploycash/contracts node"
   }
 }
